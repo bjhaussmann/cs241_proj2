@@ -72,7 +72,7 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 	public T getMax() {
 		checkInitialization();
 		T root = null;
-		if (!isEmpty)
+		if (!isEmpty())
 			root = heap[1];
 		return root;
 	}
@@ -94,6 +94,17 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		lastIndex = 0;
 	}
 
+	public static <T extends Comparable<? super T>> void heapSort(T[] array, int n)
+	{
+		for (int rootIndex = n /2 -1; rootIndex > 0; rootIndex--)
+			reheap(array, rootIndex, n-1);
+		swap(array,0,n-1);
+		for(int lastIndex = n-2;lastIndex > 0;lastIndex--)
+		{
+			reheap(array,0,lastIndex);
+			swap(array,0,lastIndex);
+		}
+	}
 	private static <T extends Comparable<? super T>> void reheap(T[] heap, int rootIndex, int lastIndex) {
 		boolean done = false;
 		T orphan = heap[rootIndex];
