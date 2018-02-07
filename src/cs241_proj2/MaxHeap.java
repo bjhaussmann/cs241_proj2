@@ -13,6 +13,7 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 	private T[] heap;
 	private int lastIndex;
 	private boolean initialized = false;
+	private int swap = 0;
 
 	public MaxHeap() {
 		this(DEFAULT_CAPACITY);
@@ -34,6 +35,7 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		this(entries.length);
 		lastIndex = entries.length;
 		assert initialized = true;
+		swap = 0;
 
 		for (int index = 0; index < entries.length; index++) {
 			heap[index + 1] = entries[index];
@@ -44,12 +46,14 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
 	public void add(T newEntry) {
 		checkInitialization();
+		swap=0;
 		int newIndex = lastIndex + 1;
 		int parentIndex = newIndex / 2;
 		while ((parentIndex > 0) && newEntry.compareTo(heap[parentIndex]) > 0) {
 			heap[newIndex] = heap[parentIndex];
 			newIndex = parentIndex;
 			parentIndex = newIndex / 2;
+			swap++;
 		}
 
 		heap[newIndex] = newEntry;
@@ -86,6 +90,11 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		}
 	}
 
+	public T getData (int index)
+	{
+		return heap[index];
+	}
+
 	public T getMax() {
 		checkInitialization();
 		T root = null;
@@ -96,6 +105,13 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
 	public int getSize() {
 		return lastIndex;
+	}
+
+	/**
+	 * @return the swap
+	 */
+	public int getSwap() {
+		return swap;
 	}
 
 	public boolean isEmpty() {
@@ -117,6 +133,7 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 				heap[rootIndex] = heap[largerChildIndex];
 				rootIndex = largerChildIndex;
 				leftChildIndex = 2 * rootIndex;
+				swap++;
 			} else
 				done = true;
 		}
@@ -126,6 +143,7 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 	public T removeMax() {
 		checkInitialization();
 		T root = null;
+		swap =0;
 		if (!isEmpty()) {
 			root = heap[1];
 			heap[1] = heap[lastIndex];
