@@ -3,6 +3,7 @@
  */
 package cs241_proj2;
 
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -30,6 +31,12 @@ public class Main {
 				System.out.print("\nInvalid command. Try again: ");
 				worked = false;
 			}
+			catch (InputMismatchException e)
+			{
+				System.out.print("\nInvalid command. Try again: ");
+				input.nextLine();
+				worked = false;
+			}
 		}
 
 		worked = false;
@@ -48,13 +55,19 @@ public class Main {
 				worked = true;
 				break;
 			default:
-				System.out.print("\nThis is not an option. Please try again: ");
+				System.out.print("\nInvalid command. Please try again: ");
 				while (worked == false) {
 					try {
 						choice = input.nextInt();
 						worked = true;
 					} catch (NumberFormatException e) {
 						System.out.print("\nInvalid command. Try again: ");
+						worked = false;
+					}
+					catch (InputMismatchException e)
+					{
+						System.out.print("\nInvalid command. Try again: ");
+						input.nextLine();
 						worked = false;
 					}
 				}
