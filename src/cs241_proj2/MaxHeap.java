@@ -46,6 +46,7 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
 	public void add(T newEntry) {
 		checkInitialization();
+		ensureCapacity();
 		swap=0;
 		int newIndex = lastIndex + 1;
 		int parentIndex = newIndex / 2;
@@ -58,7 +59,6 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
 		heap[newIndex] = newEntry;
 		lastIndex++;
-		ensureCapacity();
 	}
 
 	private void checkCapacity(int initialCapacity) {
@@ -84,8 +84,12 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
 	@SuppressWarnings("unchecked")
 	private void ensureCapacity() {
-		if (lastIndex < heap.length - 1) {
+		if (lastIndex == heap.length - 1) {
 			T[] tempHeap = (T[]) new Comparable[heap.length * 2];
+			for (int i =0; i < heap.length; i ++)
+			{
+				tempHeap[i] = heap[i];
+			}
 			heap = tempHeap;
 		}
 	}
