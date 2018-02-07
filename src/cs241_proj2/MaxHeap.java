@@ -61,11 +61,19 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		lastIndex++;
 	}
 
+	/**
+	 * Checks the initial capacity of the max heap to make sure it is less than Max Capacity.
+	 * @param initialCapacity	Initial desired capacity
+	 * @throws ArrayIndexOutOfBoundsException	if the desired size exceeds the max.
+	 */
 	private void checkCapacity(int initialCapacity) {
 		if (initialCapacity > MAX_CAPACITY)
 			throw new ArrayIndexOutOfBoundsException();
 	}
 
+	/**
+	 * Checks to ensure the maxHeap was initialized.
+	 */
 	private void checkInitialization() {
 		if (!initialized) {
 			throw new SecurityException("HEAP WAS NEVER INITIALIZED!");
@@ -73,6 +81,9 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 
 	}
 
+	/**
+	 * Clears the max heap.
+	 */
 	public void clear() {
 		checkInitialization();
 		while (lastIndex > -1) {
@@ -82,6 +93,9 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		lastIndex = 0;
 	}
 
+	/**
+	 * Checks if there is room left in the max heap for another input, if not, it doubles the size of the max heap.
+	 */
 	@SuppressWarnings("unchecked")
 	private void ensureCapacity() {
 		if (lastIndex == heap.length - 1) {
@@ -94,11 +108,19 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		}
 	}
 
+	/**
+	 * Gives the data in the heap at the index provided
+	 * @param index	Location of data requested
+	 * @return	Data in the location requested
+	 */
 	public T getData (int index)
 	{
 		return heap[index];
 	}
 
+	/**
+	 * Returns the root of the maxheap
+	 */
 	public T getMax() {
 		checkInitialization();
 		T root = null;
@@ -107,21 +129,33 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		return root;
 	}
 
+	/**
+	 * Returns the size of the current MaxHeap
+	 * @return	lastIndex
+	 */
 	public int getSize() {
 		return lastIndex;
 	}
 
 	/**
+	 * Returns how many swaps were performed
 	 * @return the swap
 	 */
 	public int getSwap() {
 		return swap;
 	}
 
+	/**
+	 * Checks if the heap is empty.
+	 */
 	public boolean isEmpty() {
 		return (lastIndex < 1);
 	}
 
+	/**
+	 * Reheaps the Heap after a removal to maintain a complete tree
+	 * @param rootIndex	The index of the root of the tree.
+	 */
 	private void reheap(int rootIndex) {
 		boolean done = false;
 		T orphan = heap[rootIndex];
@@ -144,6 +178,9 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		heap[rootIndex] = orphan;
 	}
 
+	/**
+	 * Removes the max in the Heap
+	 */
 	public T removeMax() {
 		checkInitialization();
 		T root = null;
