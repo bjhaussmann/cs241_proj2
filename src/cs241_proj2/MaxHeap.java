@@ -8,11 +8,11 @@ package cs241_proj2;
  *
  */
 public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterface<T> {
+	private static final int DEFAULT_CAPACITY = 25;
+	private static final int MAX_CAPACITY = 10000;
 	private T[] heap;
 	private int lastIndex;
 	private boolean initialized = false;
-	private static final int DEFAULT_CAPACITY = 25;
-	private static final int MAX_CAPACITY = 10000;
 
 	public MaxHeap() {
 		this(DEFAULT_CAPACITY);
@@ -57,32 +57,16 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		ensureCapacity();
 	}
 
-	public T removeMax() {
-		checkInitialization();
-		T root = null;
-		if (!isEmpty()) {
-			root = heap[1];
-			heap[1] = heap[lastIndex];
-			lastIndex--;
-			reheap(1);
+	private void checkCapacity(int initialCapacity) {
+		if (initialCapacity > MAX_CAPACITY)
+			throw new ArrayIndexOutOfBoundsException();
+	}
+
+	private void checkInitialization() {
+		if (!initialized) {
+			throw new SecurityException("HEAP WAS NEVER INITIALIZED!");
 		}
-		return root;
-	}
 
-	public T getMax() {
-		checkInitialization();
-		T root = null;
-		if (!isEmpty())
-			root = heap[1];
-		return root;
-	}
-
-	public boolean isEmpty() {
-		return (lastIndex < 1);
-	}
-
-	public int getSize() {
-		return lastIndex;
 	}
 
 	public void clear() {
@@ -94,21 +78,34 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 		lastIndex = 0;
 	}
 
-	public static <T extends Comparable<? super T>> void heapSort(T[] array, int n)
-	{
-		for (int rootIndex = n /2 -1; rootIndex > 0; rootIndex--)
-			reheap(array, rootIndex, n-1);
-		swap(array,0,n-1);
-		for(int lastIndex = n-2;lastIndex > 0;lastIndex--)
-		{
-			reheap(array,0,lastIndex);
-			swap(array,0,lastIndex);
+	@SuppressWarnings("unchecked")
+	private void ensureCapacity() {
+		if (lastIndex < heap.length - 1) {
+			T[] tempHeap = (T[]) new Comparable[heap.length * 2];
+			heap = tempHeap;
 		}
 	}
-	private static <T extends Comparable<? super T>> void reheap(T[] heap, int rootIndex, int lastIndex) {
+
+	public T getMax() {
+		checkInitialization();
+		T root = null;
+		if (!isEmpty())
+			root = heap[1];
+		return root;
+	}
+
+	public int getSize() {
+		return lastIndex;
+	}
+
+	public boolean isEmpty() {
+		return (lastIndex < 1);
+	}
+
+	private void reheap(int rootIndex) {
 		boolean done = false;
 		T orphan = heap[rootIndex];
-		int leftChildIndex = 2 * rootIndex + 1;
+		int leftChildIndex = 2 * rootIndex;
 
 		while (!done && (leftChildIndex <= lastIndex)) {
 			int largerChildIndex = leftChildIndex;
@@ -119,10 +116,22 @@ public class MaxHeap<T extends Comparable<? super T>> implements MaxHeapInterfac
 			if (orphan.compareTo(heap[largerChildIndex]) < 0) {
 				heap[rootIndex] = heap[largerChildIndex];
 				rootIndex = largerChildIndex;
-				leftChildIndex = 2 * rootIndex + 1;
+				leftChildIndex = 2 * rootIndex;
 			} else
 				done = true;
 		}
 		heap[rootIndex] = orphan;
+	}
+
+	public T removeMax() {
+		checkInitialization();
+		T root = null;
+		if (!isEmpty()) {
+			root = heap[1];
+			heap[1] = heap[lastIndex];
+			lastIndex--;
+			reheap(1);
+		}
+		return root;
 	}
 }
